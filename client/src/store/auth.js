@@ -5,7 +5,7 @@ export const authSlice = createSlice({
 
   initialState: {
     isAuthenticated: false,
-    role: "",
+    role: "role",
   },
   reducers: {
     setLoggedIn: (state) => {

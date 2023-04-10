@@ -9,6 +9,7 @@ import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Register() {
   const navigate = useNavigate();
@@ -97,27 +98,19 @@ function Register() {
     return errors;
   };
 
-  const handleSubmit = (event) => {
+  const onSubmitHandler = (event) => {
     event.preventDefault();
-    const errors = validateFormData(formData);
-    setFormErrors(errors);
-    if (Object.keys(errors).length === 0) {
-      console.log("Form Validation succesful ready to post");
-      // posting api
-      const form = {
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        phoneNumber: formData.phoneNumber,
-        role: role,
-      };
-      toast.success('Registered Succesfully');
-      navigate("/login");
-    } else {
-      console.log("Errror found in validation");
-    }
+    axios
+      .post("http://localhost:5000/user/signup", formData)
+      .then((response) => {
+        alert(response.data.message);
+        event.target.reset();
+        navigate("/login");
+      })
+      .catch((err) => console.log(err.response.data));
   };
+
+
   return (
     <Container minWidth="lg" maxWidth="lg">
       <Box
@@ -146,7 +139,7 @@ function Register() {
             Register
           </Typography>
 
-          <Box component="form" sx={{ mt: 2 }} onSubmit={handleSubmit}>
+          <Box component="form" sx={{ mt: 2 }} onSubmit={onSubmitHandler}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField

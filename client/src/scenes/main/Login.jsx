@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Box } from "@mui/system";
 import Typography from "@mui/material/Typography";
-import { Card, Grid } from "@mui/material";
+import { Card, Grid, alertClasses } from "@mui/material";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import Link from "@mui/material/Link";
@@ -11,6 +11,9 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { setLoggedIn } from "../../store/auth";
 import { useDispatch } from "react-redux";
+import axios from "axios";
+
+
 
 function Login() {
   const navigate = useNavigate();
@@ -47,25 +50,19 @@ function Login() {
     return errors;
   };
 
-  const HandleSubmit = (event) => {
+  const onSubmitHandler = (event) => {
     event.preventDefault();
-    const errors = validateFormData(formData);
-    setFormErrors(errors);
-    const form = {
-      email: formData.email,
-      password: formData.password,
-    };
+    axios
+      .post("http://localhost:5000/user/signin", formData)
+      .then((response) => {
+        const token = response.data.token;
+        localStorage.setItem("user-token", JSON.stringify(token));
+        console.log(response);
+        window.location.reload(false);
+      })
+      .catch((err) => alert(err.response.data.message));
 
-    if (Object.keys(errors).length === 0) {
-      console.log("No errors");
-      // no error post api
-      toast.success('Logged In');
-      navigate('/slot')
-      dispatch(setLoggedIn())
-    } else {
-      console.log("Errors Found");
-    }
-  };
+  }
 
   return (
     <Container minWidth="md" maxWidth="md">
@@ -95,7 +92,7 @@ function Login() {
             Login
           </Typography>
 
-          <Box component="form" onSubmit={HandleSubmit} sx={{ mt: 2 }}>
+          <Box component="form" onSubmit={onSubmitHandler} sx={{ mt: 2 }}>
             <Grid container spacing={2}>
               <Grid item xs={12}>
                 <TextField
