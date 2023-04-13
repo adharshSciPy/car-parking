@@ -1,18 +1,22 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container, Box } from "@mui/system";
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import parkedCar from '../../assests/parked-illustrations.png'
+import axios from 'axios'
 
 
 
 
 
 function Slot() {
+
+
+
   const [slot1, freeSlot1] = useState(true)
-  const [slot2, freeSlot2] = useState(false)
+  const [slot2, freeSlot2] = useState(true)
   const [slot3, freeSlot3] = useState(true)
   const freeSlotStyle = {
     backgroundColor: 'rgba(255, 0, 0, 0.333)',
@@ -44,8 +48,72 @@ function Slot() {
     },
     {
       slot: slot3
+    },
+    {
+      slot: true
+    },
+    {
+      slot: true
     }
   ]
+
+
+
+
+  const SlotCheck1 = async () => {
+    await axios
+      .get("https://api.thingspeak.com/channels/2025615/fields/1/last.txt?api_key=7U6CJW5RNHPMOIN9")
+      .then((response) => {
+        const X = response.data;
+        console.log(X);
+        if (X > 0) {
+          freeSlot1(false)      
+        }
+      })
+      .catch((err) => {
+        console.log("Slot 1 Server Responding Failed");
+      });
+
+  }
+  const SlotCheck2 = async () => {
+    await axios
+      .get("https://api.thingspeak.com/channels/2025615/fields/2/last.txt?api_key=7U6CJW5RNHPMOIN9")
+      .then((response) => {
+        const X = response.data;
+        console.log(X, "vannu");
+        if (X > 0) {
+          freeSlot2(false)
+
+        }
+      })
+      .catch((err) => {
+        console.log("Slot 2 Server Responding Failed");
+      });
+  }
+
+  const SlotCheck3 = async () => {
+    await axios
+      .get("https://api.thingspeak.com/channels/2025615/fields/3/last.txt?api_key=7U6CJW5RNHPMOIN9")
+      .then((response) => {
+        const X = response.data;
+        console.log(X);
+        if (X > 0) {
+          freeSlot3(false)
+        
+        }
+      })
+      .catch((err) => {
+        console.log("Slot 3 Server Responding Failed");
+      });
+
+  }
+
+  useEffect(() => {
+    SlotCheck1();
+    SlotCheck2();
+    SlotCheck3();
+
+  }, []);
 
   return (
     <>
@@ -80,6 +148,7 @@ function Slot() {
             </Box>
           </Grid>
         </Grid>
+        
 
       </Container>
     </>

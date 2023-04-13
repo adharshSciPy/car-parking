@@ -16,7 +16,7 @@ import Button from "@mui/material/Button";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import Container from "@mui/material/Container";
-import { logout } from "../../store/auth";
+import { logout } from "../../store/loginedUserSlice";
 import LogoutIcon from '@mui/icons-material/Logout';
 import Cookies from "js-cookie";
 import { toast } from "react-toastify";
@@ -39,12 +39,12 @@ const mainNavItems = [
 function DrawerAppBar(props) {
   const naivgate = useNavigate();
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const isConnected = useSelector((state) => state.loginedUser.isConnected);
   // logout functionality
   const handleLogout = () => {
     dispatch(logout())
-    naivgate('/')
-    Cookies.remove('Token')
+    naivgate('/login')
+    localStorage.clear()
     toast.success('Logout Succesfully')
   }
 
@@ -74,7 +74,7 @@ function DrawerAppBar(props) {
       </Typography>
       <Divider />
       <List>
-        {!isAuthenticated &&
+        {!isConnected &&
           mainNavItems.map((item, val) => (
             <ListItem key={val} disablePadding>
               <ListItemButton
@@ -86,7 +86,7 @@ function DrawerAppBar(props) {
             </ListItem>
           ))}
 
-        {isAuthenticated &&
+        {isConnected &&
           navItems.map((item, val) => (
             <ListItem key={val} disablePadding>
               <ListItemButton sx={{ textAlign: "center" }}>
@@ -128,7 +128,7 @@ function DrawerAppBar(props) {
               Car Parking
             </Typography>
             <Box sx={{ display: { xs: "none", sm: "block" } }}>
-              {!isAuthenticated &&
+              {!isConnected &&
                 mainNavItems.map((item, val) => (
                   <NavLink
                     to={item.link}
@@ -141,7 +141,7 @@ function DrawerAppBar(props) {
                     </Button>
                   </NavLink>
                 ))}
-              {isAuthenticated && <Button onClick={handleLogout} startIcon={<LogoutIcon />} sx={{ backgroundColor: 'white', color: '#fff' }}>Logout</Button>}
+              {isConnected && <Button onClick={handleLogout} startIcon={<LogoutIcon />} sx={{ backgroundColor: 'white', color: '#fff' }}>Logout</Button>}
             </Box>
           </Toolbar>
         </Container>
