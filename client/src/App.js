@@ -62,7 +62,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Register />} />
         <Route path="/login" element={<ForceRedirect user={active}> <Login /> </ForceRedirect>} />
-        <Route path="/slot" element={<ProtectedRoute user={active}><Slot /> </ProtectedRoute>} />
+        <Route path="/slot" element={<ProtectedRoute user={active}> <Slot /> </ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   );

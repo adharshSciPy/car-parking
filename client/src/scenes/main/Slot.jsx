@@ -50,10 +50,10 @@ function Slot() {
       slot: slot3
     },
     {
-      slot: true
+      slot: false
     },
     {
-      slot: true
+      slot: false
     }
   ]
 
@@ -151,6 +151,10 @@ function Slot() {
         
 
       </Container>
+      <div style={{paddingTop:"30px"}}>
+        <iframe src="https://www.google.com/maps/d/embed?mid=1O8HcS2liptyPQGuUKVvN_BE92utxjQc&ehbc=2E312F" width="100%" height="480"></iframe>
+      </div>
+      
     </>
   )
 }
